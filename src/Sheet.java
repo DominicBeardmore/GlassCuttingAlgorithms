@@ -74,13 +74,12 @@ public class Sheet {
 	}
 
 	public void displaySheet() {
-		System.out.format("Shapes are formatted width then height.%n");
 		int numOfShelves = 0;
 
 		for (Shelf shelf : shelves) {
 			List<Shape> shapes = shelf.getShapes();
-			System.out.format("Shelf number: %d%n", numOfShelves);
 			numOfShelves++;
+			System.out.format("Shelf number: %d%n", numOfShelves);
 			System.out.format("| width | height |%n");
 
 			for (Shape shape : shapes) {
