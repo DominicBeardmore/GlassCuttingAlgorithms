@@ -67,4 +67,8 @@ public class Shelf {
 		return usedWidth;
 	}
 
+	public int getUsedWidth() {
+		return this.usedWidth;
+	}
+
 }

@@ -20,8 +20,23 @@ public class PerformanceTest {
 
 		System.out.println();
 
-		PerformanceTest p = new PerformanceTest();
-		p.test();
+		// PerformanceTest p = new PerformanceTest();
+		// p.test();
+
+
+		Algorithms algo = new Algorithms();
+		Generator generator = new Generator();
+		List<Shape> shapes = generator.generateShapeList(10);
+		List<Sheet> sheets = algo.nextFit(shapes);
+
+		int sheetNum = 0;
+		for (Sheet sheet : sheets) {
+			sheetNum++;
+			System.out.format("Sheet number: %d%n", sheetNum);
+			sheet.displaySheet();
+		}
+
+
 		/*
 		 * You must complete the Generator class in order to generate a random
 		 * test values. You must complete the Algorithms class in order to call
@@ -59,16 +74,21 @@ public class PerformanceTest {
 
 	}
 
-	public void test() {
+	private List<Shape> generateShapes(){
 		Generator generator = new Generator();
-		List<Shape> shapes = generator.generateShapeList(10);
-		Sheet sheet = new Sheet();
-		Shelf shelf = new Shelf();
-		for (Shape shape : shapes) {
-			shelf.place(shape);
-		}
-
-		sheet.addShelf(shelf);
-		sheet.displaySheet();
+		return generator.generateShapeList(10);
 	}
+
+	// public void test() {
+	// 	Generator generator = new Generator();
+	// 	List<Shape> shapes = generator.generateShapeList(10);
+	// 	Sheet sheet = new Sheet();
+	// 	Shelf shelf = new Shelf();
+	// 	for (Shape shape : shapes) {
+	// 		shelf.place(shape);
+	// 	}
+
+	// 	sheet.addShelf(shelf);
+	// 	sheet.displaySheet();
+	// }
 }
