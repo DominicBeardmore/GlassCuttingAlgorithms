@@ -27,15 +27,23 @@ public class PerformanceTest {
 		Algorithms algo = new Algorithms();
 		Generator generator = new Generator();
 		List<Shape> shapes = generator.generateShapeList(10);
-		List<Sheet> sheets = algo.nextFit(shapes);
+		List<Sheet> sheets = algo.firstFit(shapes);
 
 		int sheetNum = 0;
 		for (Sheet sheet : sheets) {
 			sheetNum++;
-			System.out.format("Sheet number: %d%n", sheetNum);
+			System.out.format("/////////////// Sheet number: %d ////////////////// %n", sheetNum);
 			sheet.displaySheet();
 		}
 
+		// System.out.println("//////////////// firstFit");
+		// sheets = algo.firstFit(shapes);
+		// sheetNum = 0;
+		// for (Sheet sheet : sheets) {
+		// 	sheetNum++;
+		// 	System.out.format("Sheet number: %d%n", sheetNum);
+		// 	sheet.displaySheet();
+		// }
 
 		/*
 		 * You must complete the Generator class in order to generate a random

@@ -75,10 +75,10 @@ public class Sheet {
 
 	public void displaySheet() {
 		int numOfShelves = 0;
-
 		for (Shelf shelf : shelves) {
 			List<Shape> shapes = shelf.getShapes();
 			numOfShelves++;
+
 			System.out.format("Shelf number: %d%n", numOfShelves);
 			System.out.format("| width | height |%n");
 
