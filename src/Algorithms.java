@@ -16,6 +16,7 @@ public class Algorithms {
 
 	private Sheet target_sheet;
 	private Shelf target_shelf;
+	private int numberOfShapes = 0;
 
 	/**
 	 * This method is used to implement the next fit algorithm
@@ -39,16 +40,16 @@ public class Algorithms {
 		 */
 		List<Sheet> usedSheets = new ArrayList<Sheet>();
 
-		target_sheet = new Sheet();
-		usedSheets.add(target_sheet);
-
 		for (Shape shape : shapes) {
 			if (usedSheets.size() == 0) {					// WHEN NO SHEETS HAVE BEEN CREATED
-				target_sheet = newSheet();					// CREATE NEW SHEET
-				target_shelf = new Shelf();					// CREATE NEW SHELF
-				target_shelf.place(shape);					// PLACE SHAPE
-				target_sheet.addShelf(target_shelf);		// ADD SHELF TO SHEET
-				usedSheets.add(target_sheet);				// ADD SHEET TO LIST
+				target_sheet = newSheet(shape);
+				usedSheets.add(target_sheet);
+				continue;
+			}
+
+			if (numberOfShapes >= 20) {
+				target_sheet = newSheet(shape);
+				usedSheets.add(target_sheet);
 				continue;
 			}
 
@@ -85,21 +86,21 @@ public class Algorithms {
 			// ROTATE SHAPE BACK TO ITS ORIGINAL ORIENTATION
 			shape.rotate();
 
-			target_sheet = newSheet();
-			target_shelf = new Shelf();
-			target_shelf.place(shape);
-			target_sheet.addShelf(target_shelf);
+			target_sheet = newSheet(shape);
 			usedSheets.add(target_sheet);
 		}
 
-
-		/*
-		 * Add in your own code so that the method will place all the shapes
-		 * according to NextFit under ALL the assumptions mentioned in the
-		 * specification
-		 */
-
 		return usedSheets;
+	}
+
+	private Sheet newSheet(Shape shape) {
+		target_sheet = new Sheet();					// CREATE NEW SHEET
+		target_shelf = new Shelf();					// CREATE NEW SHELF
+		target_shelf.place(shape);					// PLACE SHAPE
+		target_sheet.addShelf(target_shelf);		// ADD SHELF TO SHEET
+		numberOfShapes = 1;
+
+		return target_sheet;
 	}
 
 	// TRY FITTING SHAPE ONTO SHELF. RETURN TRUE IF SUCCESSFULLY PLACED
@@ -113,16 +114,12 @@ public class Algorithms {
 		if (shapeHeight <= shelfHeight) {									// CHECK THAT THE SHAPE HEIGHT IS <= TO THE SHELF HEIGHT
 			if (shapeWidth <= Sheet.SHEET_WIDTH - shelfUsedWidth) {			// CHECK THAT THE REMAINING SPACE IN THE SHELF IS >= THAN THE SHAPE WIDTH
 				shelf.place(shape);											// PLACE SHAPE ONTO SHELF
+				numberOfShapes++;
 				return true;												// RETURN TRUE ONCE THE SHAPE HAS BEEN PLACED
 			}
 		}
 
 		return false;														// SHAPE WASN'T FITTED
-	}
-
-
-	private Sheet newSheet() {
-		return new Sheet();
 	}
 
 	// IF NEW SHELF HEIGHT IS LESS THAN SHEET MAX HEIGHT THEN A NEW SHELF IS CREATED
@@ -136,7 +133,17 @@ public class Algorithms {
 		target_shelf = new Shelf();										// MAKE A NEW SHELF
 		target_shelf.place(shape);										// PLACE THE SHAPE ONTO THE SHELF
 		sheet.addShelf(target_shelf);									// ADD THE SHELF TO THE SHEET
+		numberOfShapes++;
+
 		return true;													// RETURN TRUE WHEN THE SHAPE HAS BEEN FITTED
+	}
+
+	private int shapeLimit(Sheet sheet) {
+		int numberOfShapes = 0;
+		for (Shelf shelf: sheet.getShelves()) {		// FOREACH OF THE SHELVES IN A SHEET TRY TO FIT THE SHAPE
+			numberOfShapes += shelf.getShapes().size();
+		}
+		return numberOfShapes;
 	}
 
 	/**
@@ -162,15 +169,16 @@ public class Algorithms {
 
 		for (Shape shape : shapes) {
 			if (usedSheets.size() == 0) {					// WHEN NO SHEETS HAVE BEEN CREATED
-				target_sheet = newSheet();					// CREATE NEW SHEET
-				target_shelf = new Shelf();					// CREATE NEW SHELF
-				target_shelf.place(shape);					// PLACE SHAPE
-				target_sheet.addShelf(target_shelf);		// ADD SHELF TO SHEET
-				usedSheets.add(target_sheet);				// ADD SHEET TO LIST
+				target_sheet = newSheet(shape);
+				usedSheets.add(target_sheet);
 				continue;
 			}
+
 			boolean fitted = false;							// HAS THE SHAPE BEEN FITTED
 			for (Sheet sheet : usedSheets) {				// FOREACH SHEET TRY TO FIT THE SHAPE ONTO EACH OF THE SHELVES
+				if (shapeLimit(sheet) >= 20)				// MAX NUMBER OF SHAPES ON A SHEET
+					continue;
+
 				for (Shelf shelf: sheet.getShelves()) {		// FOREACH OF THE SHELVES IN A SHEET TRY TO FIT THE SHAPE
 					fitted = fitOnShelf(shape, shelf);
 
@@ -193,12 +201,7 @@ public class Algorithms {
 
 				if ( fitted )
 					break;									// BREAK OUT OF THE SHEET LOOP AS SHAPE HAS BEEN FITTED
-			}
 
-			if ( fitted )
-				continue;									// CONTINUE TO THE NEXT SHAPE AS THE SHAPE HAS BEEN FITTED
-
-			for (Sheet sheet : usedSheets) {				// FOREACH SHEET TRY TO ADD A NEW SHELF
 				fitted = newShelf(sheet, shape);
 				if ( fitted )
 					break;									// BREAK OUT OF THE SHEET LOOP AS SHAPE HAS BEEN FITTED IN A NEW SHELF
@@ -218,11 +221,8 @@ public class Algorithms {
 			if ( fitted )
 				continue;									// CONTINUE TO THE NEXT SHAPE AS THE SHAPE HAS BEEN FITTED
 
-			target_sheet = newSheet();						// MAKE A NEW SHEET
-			target_shelf = new Shelf();						// MAKE A NEW SHELF
-			target_shelf.place(shape);						// PLACE THE SHAPE ONTO THE NEW SHELF
-			target_sheet.addShelf(target_shelf);			// ADD THE SHELF TO THE NEW SHEET
-			usedSheets.add(target_sheet);					// ADD THE NEW SHEET TO THE USEDSHEET LIST
+			target_sheet = newSheet(shape);
+			usedSheets.add(target_sheet);
 		}
 
 		/*
