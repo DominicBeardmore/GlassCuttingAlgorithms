@@ -104,7 +104,7 @@ public class PerformanceTest {
 	}
 
 	private void displayPerformance(int meanSheets, long meanTime) {
-		System.out.format("%d Sheets%n%d ms%n", meanSheets, meanTime);
+		System.out.format("%d Sheets%n%d ns%n", meanSheets, meanTime);
 	}
 
 	private List<Shape> generateShapes(int numberOfShapes){
