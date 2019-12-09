@@ -1,4 +1,6 @@
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
 
 /**
  * @Purpose: The PerformanceTest class is used to compare the implemented
@@ -17,34 +19,6 @@ public class PerformanceTest {
 		System.out.println("***********************************************");
 		System.out.println("*********** Performance analysis **************");
 		System.out.println("**********************************************");
-
-		System.out.println();
-
-		// PerformanceTest p = new PerformanceTest();
-		// p.test();
-
-
-		Algorithms algo = new Algorithms();
-		Generator generator = new Generator();
-		List<Shape> shapes = generator.generateShapeList(10);
-		List<Sheet> sheets = algo.firstFit(shapes);
-
-		int sheetNum = 0;
-		for (Sheet sheet : sheets) {
-			sheetNum++;
-			System.out.format("/////////////// Sheet number: %d ////////////////// %n", sheetNum);
-			sheet.displaySheet();
-		}
-
-		// System.out.println("//////////////// firstFit");
-		// sheets = algo.firstFit(shapes);
-		// sheetNum = 0;
-		// for (Sheet sheet : sheets) {
-		// 	sheetNum++;
-		// 	System.out.format("Sheet number: %d%n", sheetNum);
-		// 	sheet.displaySheet();
-		// }
-
 		/*
 		 * You must complete the Generator class in order to generate a random
 		 * test values. You must complete the Algorithms class in order to call
@@ -68,35 +42,73 @@ public class PerformanceTest {
 		 **/
 
 		// total number of tests - you need to CHANGE this value
-		int noOfTests = 0;
+		int noOfTests = 5;
 
 		// number of repetitions for each test - you need to CHANGE this value
-		int noOfRep = 0;
+		int noOfRep = 5;
 
 		// number of shapes needed for the first run - you need to CHANGE this
 		// value
-		int noOfShapes = 0;
+		int noOfShapes = 10000;
 
 		// the increment in the number of shapes - you need to CHANGE this value
-		int increment = 0;
+		int increment = 10000;
 
+		PerformanceTest p = new PerformanceTest();
+
+		for (int i = 0; i < noOfTests; i++) {
+			List<List<Shape>> shapesList = p.generateList(noOfShapes, noOfRep);
+			p.nextFit(shapesList);
+			p.firstFit(shapesList);
+			noOfShapes += increment;
+		}
 	}
 
-	private List<Shape> generateShapes(){
+	private List<List<Shape>> generateList(int numberOfShapes, int noOfRep) {
+		List<List<Shape>> listOfLists = new ArrayList<List<Shape>>();
+		for (int j = 0; j < noOfRep; j++) {
+			listOfLists.add(generateShapes(numberOfShapes));
+		}
+
+		return listOfLists;
+	}
+
+	private void nextFit(List<List<Shape>> shapesList) {
+		long totalTime = 0;
+		int totalSheets = 0;
+		for (List<Shape> shapes : shapesList) {
+			Algorithms algo = new Algorithms();
+			long start = System.nanoTime();
+			List<Sheet> sheets = algo.nextFit(shapes);
+			long end = System.nanoTime();
+			totalTime 	+= end - start;
+			totalSheets += sheets.size();
+		}
+		System.out.format("NextFit was carried out %d times with %d shapes%n", shapesList.size(), shapesList.get(0).size());
+		displayPerformance(totalSheets/shapesList.size(), totalTime/shapesList.size());
+	}
+
+	private void firstFit(List<List<Shape>> shapesList) {
+		long totalTime = 0;
+		int totalSheets = 0;
+		for (List<Shape> shapes : shapesList) {
+			Algorithms algo = new Algorithms();
+			long start = System.nanoTime();
+			List<Sheet> sheets = algo.firstFit(shapes);
+			long end = System.nanoTime();
+			totalTime 	+= end - start;
+			totalSheets += sheets.size();
+		}
+		System.out.format("FirstFit was carried out %d times with %d shapes%n", shapesList.size(), shapesList.get(0).size());
+		displayPerformance(totalSheets/shapesList.size(), totalTime/shapesList.size());
+	}
+
+	private void displayPerformance(int meanSheets, long meanTime) {
+		System.out.format("%d Sheets%n%d ms%n", meanSheets, meanTime);
+	}
+
+	private List<Shape> generateShapes(int numberOfShapes){
 		Generator generator = new Generator();
-		return generator.generateShapeList(10);
+		return generator.generateShapeList(numberOfShapes);
 	}
-
-	// public void test() {
-	// 	Generator generator = new Generator();
-	// 	List<Shape> shapes = generator.generateShapeList(10);
-	// 	Sheet sheet = new Sheet();
-	// 	Shelf shelf = new Shelf();
-	// 	for (Shape shape : shapes) {
-	// 		shelf.place(shape);
-	// 	}
-
-	// 	sheet.addShelf(shelf);
-	// 	sheet.displaySheet();
-	// }
 }
