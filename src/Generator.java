@@ -40,11 +40,11 @@ public class Generator {
 	}
 
 	private int generateHeight() {
-		return (int) (MAX_SIZE_HEIGHT * Math.random());
+		return new Random().nextInt(MAX_SIZE_HEIGHT) + 1;
 	}
 
 	private int generateWidth() {
-		return (int) (MAX_SIZE_WIDTH * Math.random());
+		return new Random().nextInt(MAX_SIZE_WIDTH) + 1;
 	}
 
 
