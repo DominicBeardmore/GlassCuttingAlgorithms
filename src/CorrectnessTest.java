@@ -18,16 +18,16 @@ public class CorrectnessTest {
 		System.out.println();
 
 		CorrectnessTest ct = new CorrectnessTest();
-		// ct.nf_same_shelf_test();
-		// ct.nf_same_shelf_rotate_test();
-		//ct.nf_new_sheet_test();
-		// ct.nf_new_shelf_test();
-		// ct.nf_new_sheet_shape_limit_test();
+		ct.nf_same_shelf_test();
+		ct.nf_same_shelf_rotate_test();
+		ct.nf_new_sheet_test();
+		ct.nf_new_shelf_test();
+		ct.nf_new_sheet_shape_limit_test();
 
-		// ct.ff_same_shelf_test();
-		// ct.ff_same_shelf_rotate_test();
-		// ct.ff_new_shelf_test();
-		// ct.ff_new_sheet_test();
+		ct.ff_same_shelf_test();
+		ct.ff_same_shelf_rotate_test();
+		ct.ff_new_shelf_test();
+		ct.ff_new_sheet_test();
 		ct.ff_new_sheet_shape_limit_test();
 	}
 	 //NEXT FIT TESTS
